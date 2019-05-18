@@ -16,7 +16,18 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    geometry = new THREE.BoxGeometry(1, 1, 1);
+    geometry = new THREE.BufferGeometry();
+    var vertices = new Float32Array([
+        -1.0, -1.0,  1.0,
+         1.0, -1.0,  1.0,
+         1.0,  1.0,  1.0,
+
+         1.0,  1.0,  1.0,
+        -1.0,  1.0,  1.0,
+        -1.0, -1.0,  1.0
+    ]);
+    geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    
     material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
