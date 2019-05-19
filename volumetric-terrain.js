@@ -16,19 +16,38 @@ var wireframe;
 var simplex = new SimplexNoise();
 
 var grid = {
-    minX: -5,
-    minY: -2.5,
-    minZ: -5,
-    maxX: 5,
-    maxY: 2.5,
-    maxZ: 5,
+    minX: -10,
+    minY: -5,
+    minZ: -10,
+    maxX: 10,
+    maxY: 5,
+    maxZ: 10,
     numCellsX: 100,
     numCellsY: 50,
     numCellsZ: 100,
 };
 
 function density(x, y, z) {
+//    if ((x < grid.minX + 0.0001) ||
+//        (y < grid.minY + 0.0001) ||
+//        (z < grid.minZ + 0.0001) ||
+//        (x > grid.maxX - 0.0001) ||
+//        (y > grid.maxY - 0.0001) ||
+//        (z > grid.maxZ - 0.0001)) {
+//        return -10000;
+//    }
+    
+//    x += simplex.noise3D(x * 0.5, y * 0.5, z * 0.5) * 0.5;
+//    y += simplex.noise3D(x * 0.5 + 100, y * 0.5 + 100, z * 0.5 + 100) * 0.5;
+//    z += simplex.noise3D(x * 0.5 + 200, y * 0.5 + 200, z * 0.5 + 200) * 0.5;
+    x += simplex.noise3D(x * 0.25, y * 0.25, z * 0.25);
+    y += simplex.noise3D(x * 0.25 + 100, y * 0.25 + 100, z * 0.25 + 100);
+    z += simplex.noise3D(x * 0.25 + 200, y * 0.25 + 200, z * 0.25 + 200);
+//    x += simplex.noise3D(x * 0.1, y * 0.1, z * 0.1) * 2;
+//    y += simplex.noise3D(x * 0.1 + 100, y * 0.1 + 100, z * 0.1 + 100) * 2;
+//    z += simplex.noise3D(x * 0.1 + 200, y * 0.1 + 200, z * 0.1 + 200) * 2;
     return -y +
+        simplex.noise3D(x * 0.1, y * 0.1, z * 0.1) * 3 +
         simplex.noise3D(x * 0.25, y * 0.25, z * 0.25) * 1.5 +
         simplex.noise3D(x * 1, y * 1, z * 1) * 1 +
         simplex.noise3D(x * 4, y * 4, z * 4) * 0.1;
@@ -79,6 +98,7 @@ function init() {
 
     scene.add(container);
     
+    camera.position.y = 5;
     camera.position.z = 10;
 }
 
