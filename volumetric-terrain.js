@@ -28,35 +28,29 @@ var grid = {
 };
 
 function density(x, y, z) {
-//    if ((x < grid.minX + 0.0001) ||
-//        (y < grid.minY + 0.0001) ||
-//        (z < grid.minZ + 0.0001) ||
-//        (x > grid.maxX - 0.0001) ||
-//        (y > grid.maxY - 0.0001) ||
-//        (z > grid.maxZ - 0.0001)) {
-//        return -10000;
-//    }
+    if (y > grid.maxY - 0.0001) {
+        return -1;
+    }
     
-//    x += simplex.noise3D(x * 0.5, y * 0.5, z * 0.5) * 0.5;
-//    y += simplex.noise3D(x * 0.5 + 100, y * 0.5 + 100, z * 0.5 + 100) * 0.5;
-//    z += simplex.noise3D(x * 0.5 + 200, y * 0.5 + 200, z * 0.5 + 200) * 0.5;
-    x += simplex.noise3D(x * 0.25, y * 0.25, z * 0.25);
-    y += simplex.noise3D(x * 0.25 + 100, y * 0.25 + 100, z * 0.25 + 100);
-    z += simplex.noise3D(x * 0.25 + 200, y * 0.25 + 200, z * 0.25 + 200);
-//    x += simplex.noise3D(x * 0.1, y * 0.1, z * 0.1) * 2;
-//    y += simplex.noise3D(x * 0.1 + 100, y * 0.1 + 100, z * 0.1 + 100) * 2;
-//    z += simplex.noise3D(x * 0.1 + 200, y * 0.1 + 200, z * 0.1 + 200) * 2;
+//    x += simplex.noise3D(x * 0.25, y * 0.25, z * 0.25);
+//    y += simplex.noise3D(x * 0.25 + 100, y * 0.25 + 100, z * 0.25 + 100);
+//    z += simplex.noise3D(x * 0.25 + 200, y * 0.25 + 200, z * 0.25 + 200);
     return -y +
-        simplex.noise3D(x * 0.1, y * 0.1, z * 0.1) * 3 +
-        simplex.noise3D(x * 0.25, y * 0.25, z * 0.25) * 1.5 +
-        simplex.noise3D(x * 1, y * 1, z * 1) * 1 +
-        simplex.noise3D(x * 4, y * 4, z * 4) * 0.1;
+        simplex.noise3D(x * 0.125, y * 0.125, z * 0.125) * 4 +
+        simplex.noise3D(x * 0.25, y * 0.25, z * 0.25) * 2 +
+        simplex.noise3D(x * 0.5, y * 0.5, z * 0.5) * 1 +
+        simplex.noise3D(x * 1, y * 1, z * 1) * 0.5 +
+        simplex.noise3D(x * 2, y * 2, z * 2) * 0.25;
 //    return -(x * x + y * y + z * z) + 4;
 }
 
 function init() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    
+//    var fogColor = new THREE.Color(0x006184);
+//    scene.background = fogColor;
+//    scene.fog = new THREE.FogExp2(fogColor, 0.05);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
