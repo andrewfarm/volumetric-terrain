@@ -16,13 +16,13 @@ var grid = {
     maxX: 5,
     maxY: 5,
     maxZ: 5,
-    numCellsX: 10,
-    numCellsY: 10,
-    numCellsZ: 10,
+    numCellsX: 100,
+    numCellsY: 100,
+    numCellsZ: 100,
 };
 
 function density(x, y, z) {
-    return -y;
+    return -y + simplex.noise3D(x * 0.5, y * 0.5, z * 0.5);
 }
 
 function init() {

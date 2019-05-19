@@ -311,9 +311,9 @@ function marchingCubes(f, grid) {
                 for (let i = 0; i < VERTICES.length; i++) {
                     let v = VERTICES[i];
                     let transformed = [
-                        v[0] + cellX,
-                        v[1] + cellY,
-                        v[2] + cellZ,
+                        v[0] * cellSizeX + cellX,
+                        v[1] * cellSizeY + cellY,
+                        v[2] * cellSizeZ + cellZ,
                     ];
                     if (f(transformed[0], transformed[1], transformed[2]) > 0) {
                         caseNumber |= (1 << i);
@@ -326,9 +326,9 @@ function marchingCubes(f, grid) {
                         let edge = EDGES[edgeIndex];
                         let meshVertex = interp(VERTICES[edge[0]], VERTICES[edge[1]]);
                         
-                        mesh.push(meshVertex[0] + cellX);
-                        mesh.push(meshVertex[1] + cellY);
-                        mesh.push(meshVertex[2] + cellZ);
+                        mesh.push(meshVertex[0] * cellSizeX + cellX);
+                        mesh.push(meshVertex[1] * cellSizeY + cellY);
+                        mesh.push(meshVertex[2] * cellSizeZ + cellZ);
                     }
                 }
                 
