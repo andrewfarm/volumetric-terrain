@@ -22,7 +22,7 @@ var grid = {
 };
 
 function density(x, y, z) {
-    return y;
+    return -y;
 }
 
 function init() {
@@ -35,16 +35,7 @@ function init() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     geometry = new THREE.BufferGeometry();
-    var vertexData = new Float32Array([
-        -1.0, -1.0,  1.0,
-         1.0, -1.0,  1.0,
-         1.0,  1.0,  1.0,
-
-         1.0,  1.0,  1.0,
-        -1.0,  1.0,  1.0,
-        -1.0, -1.0,  1.0
-    ]);
-//    var vertexData = marchingCubes(density, grid);
+    var vertexData = marchingCubes(density, grid);
     geometry.addAttribute('position', new THREE.BufferAttribute(vertexData, 3));
     
     material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -57,8 +48,7 @@ function init() {
 function animate() {
     requestAnimationFrame(animate);
 
-//    cube.rotation.x += 0.01;
-//    cube.rotation.y += 0.01;
+    cube.rotation.y += -0.005;
 
     renderer.render(scene, camera);
 };
