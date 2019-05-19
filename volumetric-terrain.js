@@ -13,13 +13,13 @@ var simplex = new SimplexNoise();
 
 var grid = {
     minX: -5,
-    minY: -5,
+    minY: -2.5,
     minZ: -5,
     maxX: 5,
-    maxY: 5,
+    maxY: 2.5,
     maxZ: 5,
     numCellsX: 100,
-    numCellsY: 100,
+    numCellsY: 50,
     numCellsZ: 100,
 };
 
