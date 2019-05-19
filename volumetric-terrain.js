@@ -15,6 +15,31 @@ var wireframe;
 
 var simplex = new SimplexNoise();
 
+const terrainVertexShader = '\
+varying vec3 v_pos;\
+\
+void main() {\
+    v_pos = position;\
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\
+}\
+';
+
+const terrainFragmentShader = '\
+uniform vec3 colorA;\
+uniform vec3 colorB;\
+\
+varying vec3 v_pos;\
+\
+void main() {\
+    gl_FragColor = vec4(mix(colorA, colorB, v_pos.y * 0.5), 1.0);\
+}\
+';
+
+var terrainUniforms = {
+    colorB: {type: 'vec3', value: new THREE.Color(0xACB6E5)},
+    colorA: {type: 'vec3', value: new THREE.Color(0x74ebd5)}
+};
+
 var grid = {
     minX: -10,
     minY: -5,
@@ -72,12 +97,18 @@ function init() {
     geometry.addAttribute('position', new THREE.InterleavedBufferAttribute(buf, 3, 0));
     geometry.addAttribute('normal', new THREE.InterleavedBufferAttribute(buf, 3, 3));
     
-    material = new THREE.MeshLambertMaterial(
+//    material = new THREE.MeshLambertMaterial(
+//    {
+//        color: 0x00c000,
+//        polygonOffset: true,
+//        polygonOffsetFactor: 1,
+//        polygonOffsetUnits: 1
+//    });
+    material = new THREE.ShaderMaterial(
     {
-        color: 0x00c000,
-        polygonOffset: true,
-        polygonOffsetFactor: 1,
-        polygonOffsetUnits: 1
+        uniforms: terrainUniforms,
+        vertexShader: terrainVertexShader,
+        fragmentShader: terrainFragmentShader
     });
     mesh = new THREE.Mesh(geometry, material);
     container.add(mesh);
@@ -88,7 +119,7 @@ function init() {
         transparent: true,
         opacity: 0.2
     });
-    container.add(new THREE.LineSegments(new THREE.WireframeGeometry(geometry), wireframeMaterial));
+//    container.add(new THREE.LineSegments(new THREE.WireframeGeometry(geometry), wireframeMaterial));
 
     scene.add(container);
     
