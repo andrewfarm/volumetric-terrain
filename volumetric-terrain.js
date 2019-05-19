@@ -1,12 +1,29 @@
 var scene;
 var camera;
 var renderer;
+var controls;
 
 var geometry;
 var material;
 var cube;
 
 var simplex = new SimplexNoise();
+
+var grid = {
+    minX: -5,
+    minY: -5,
+    minZ: -5,
+    maxX: 5,
+    maxY: 5,
+    maxZ: 5,
+    numCellsX: 10,
+    numCellsY: 10,
+    numCellsZ: 10,
+};
+
+function density(x, y, z) {
+    return y;
+}
 
 function init() {
     scene = new THREE.Scene();
@@ -15,9 +32,10 @@ function init() {
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     geometry = new THREE.BufferGeometry();
-    var vertices = new Float32Array([
+    var vertexData = new Float32Array([
         -1.0, -1.0,  1.0,
          1.0, -1.0,  1.0,
          1.0,  1.0,  1.0,
@@ -26,20 +44,21 @@ function init() {
         -1.0,  1.0,  1.0,
         -1.0, -1.0,  1.0
     ]);
-    geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+//    var vertexData = marchingCubes(density, grid);
+    geometry.addAttribute('position', new THREE.BufferAttribute(vertexData, 3));
     
     material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
-    camera.position.z = 5;
+    camera.position.z = 10;
 }
 
 function animate() {
     requestAnimationFrame(animate);
 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+//    cube.rotation.x += 0.01;
+//    cube.rotation.y += 0.01;
 
     renderer.render(scene, camera);
 };
