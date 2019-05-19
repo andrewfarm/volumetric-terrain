@@ -293,6 +293,13 @@ function interp(v1, v2) {
     ];
 }
 
+function normalize(v) {
+    let length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    v[0] /= length;
+    v[1] /= length;
+    v[2] /= length;
+}
+
 function marchingCubes(f, grid) {
     const cellSizeX = (grid.maxX - grid.minX) / grid.numCellsX;
     const cellSizeY = (grid.maxY - grid.minY) / grid.numCellsY;
@@ -324,11 +331,28 @@ function marchingCubes(f, grid) {
                 for (let edgeIndices of triangles) {
                     for (let edgeIndex of edgeIndices) {
                         let edge = EDGES[edgeIndex];
-                        let meshVertex = interp(VERTICES[edge[0]], VERTICES[edge[1]]);
+                        let v = interp(VERTICES[edge[0]], VERTICES[edge[1]]);
+                        v[0] = v[0] * cellSizeX + cellX;
+                        v[1] = v[1] * cellSizeY + cellY;
+                        v[2] = v[2] * cellSizeZ + cellZ;
                         
-                        mesh.push(meshVertex[0] * cellSizeX + cellX);
-                        mesh.push(meshVertex[1] * cellSizeY + cellY);
-                        mesh.push(meshVertex[2] * cellSizeZ + cellZ);
+                        // vertex position
+                        mesh.push(v[0]);
+                        mesh.push(v[1]);
+                        mesh.push(v[2]);
+                        
+                        let d = cellSizeX;
+                        let gradient = [
+                            f(v[0] - d, v[1], v[2]) - f(v[0] + d, v[1], v[2]),
+                            f(v[0], v[1] - d, v[2]) - f(v[0], v[1] + d, v[2]),
+                            f(v[0], v[1], v[2] - d) - f(v[0], v[1], v[2] + d),
+                        ];
+                        normalize[gradient];
+                        
+                        // vertex normal
+                        mesh.push(gradient[0]);
+                        mesh.push(gradient[1]);
+                        mesh.push(gradient[2]);
                     }
                 }
                 

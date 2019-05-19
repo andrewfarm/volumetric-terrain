@@ -3,6 +3,8 @@ var camera;
 var renderer;
 var controls;
 
+var light;
+
 var geometry;
 var material;
 var cube;
@@ -22,7 +24,10 @@ var grid = {
 };
 
 function density(x, y, z) {
-    return -y + simplex.noise3D(x * 0.5, y * 0.5, z * 0.5);
+    return -y +
+        simplex.noise3D(x * 0.25, y * 0.25, z * 0.25) * 1.5 +
+        simplex.noise3D(x * 1, y * 1, z * 1) * 1 +
+        simplex.noise3D(x * 4, y * 4, z * 4) * 0.1;
 }
 
 function init() {
@@ -33,12 +38,17 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     controls = new THREE.OrbitControls(camera, renderer.domElement);
+    
+    light = new THREE.DirectionalLight(0xffffff, 1);
+    scene.add(light);
 
     geometry = new THREE.BufferGeometry();
     var vertexData = marchingCubes(density, grid);
-    geometry.addAttribute('position', new THREE.BufferAttribute(vertexData, 3));
+    var buf = new THREE.InterleavedBuffer(vertexData, 6);
+    geometry.addAttribute('position', new THREE.InterleavedBufferAttribute(buf, 3, 0));
+    geometry.addAttribute('normal', new THREE.InterleavedBufferAttribute(buf, 3, 3));
     
-    material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    material = new THREE.MeshLambertMaterial({ color: 0x00c000 });
     cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
