@@ -3,11 +3,15 @@ var camera;
 var renderer;
 var controls;
 
-var light;
+var ambientLight;
+var directionalLight;
 
 var geometry;
 var material;
-var cube;
+
+var container;
+var mesh;
+var wireframe;
 
 var simplex = new SimplexNoise();
 
@@ -28,6 +32,7 @@ function density(x, y, z) {
         simplex.noise3D(x * 0.25, y * 0.25, z * 0.25) * 1.5 +
         simplex.noise3D(x * 1, y * 1, z * 1) * 1 +
         simplex.noise3D(x * 4, y * 4, z * 4) * 0.1;
+//    return -(x * x + y * y + z * z) + 4;
 }
 
 function init() {
@@ -38,9 +43,15 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.zoomSpeed = 0.5;
     
-    light = new THREE.DirectionalLight(0xffffff, 1);
-    scene.add(light);
+    var ambientLight = new THREE.AmbientLight(0x404040);
+    scene.add(ambientLight);
+
+    directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    scene.add(directionalLight);
+    
+    container = new THREE.Object3D();
 
     geometry = new THREE.BufferGeometry();
     var vertexData = marchingCubes(density, grid);
@@ -48,17 +59,33 @@ function init() {
     geometry.addAttribute('position', new THREE.InterleavedBufferAttribute(buf, 3, 0));
     geometry.addAttribute('normal', new THREE.InterleavedBufferAttribute(buf, 3, 3));
     
-    material = new THREE.MeshLambertMaterial({ color: 0x00c000 });
-    cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
+    material = new THREE.MeshLambertMaterial(
+    {
+        color: 0x00c000,
+        polygonOffset: true,
+        polygonOffsetFactor: 1,
+        polygonOffsetUnits: 1
+    });
+    mesh = new THREE.Mesh(geometry, material);
+    container.add(mesh);
+    
+    var wireframeMaterial = new THREE.LineBasicMaterial(
+    {
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.2
+    });
+    container.add(new THREE.LineSegments(new THREE.WireframeGeometry(geometry), wireframeMaterial));
 
+    scene.add(container);
+    
     camera.position.z = 10;
 }
 
 function animate() {
     requestAnimationFrame(animate);
 
-    cube.rotation.y += -0.005;
+//    container.rotation.y += -0.005;
 
     renderer.render(scene, camera);
 };

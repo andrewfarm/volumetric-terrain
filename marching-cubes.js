@@ -285,11 +285,15 @@ const CASES = [
     [],
 ];
 
-function interp(v1, v2) {
+function interp(v1, v2, f) {
+    let f1 = f(v1[0], v1[1], v1[2]);
+    let f2 = f(v2[0], v2[1], v2[2]);
+    let t2 = f1 / (f1 - f2);
+    let t1 = 1 - t2;
     return [
-        (v1[0] + v2[0]) * 0.5,
-        (v1[1] + v2[1]) * 0.5,
-        (v1[2] + v2[2]) * 0.5,
+        v1[0] * t1 + v2[0] * t2,
+        v1[1] * t1 + v2[1] * t2,
+        v1[2] * t1 + v2[2] * t2,
     ];
 }
 
@@ -331,10 +335,22 @@ function marchingCubes(f, grid) {
                 for (let edgeIndices of triangles) {
                     for (let edgeIndex of edgeIndices) {
                         let edge = EDGES[edgeIndex];
-                        let v = interp(VERTICES[edge[0]], VERTICES[edge[1]]);
-                        v[0] = v[0] * cellSizeX + cellX;
-                        v[1] = v[1] * cellSizeY + cellY;
-                        v[2] = v[2] * cellSizeZ + cellZ;
+                        
+                        let v1 = VERTICES[edge[0]];
+                        let v1Transformed = [
+                            v1[0] * cellSizeX + cellX,
+                            v1[1] * cellSizeY + cellY,
+                            v1[2] * cellSizeZ + cellZ,
+                        ];
+                        
+                        let v2 = VERTICES[edge[1]];
+                        let v2Transformed = [
+                            v2[0] * cellSizeX + cellX,
+                            v2[1] * cellSizeY + cellY,
+                            v2[2] * cellSizeZ + cellZ,
+                        ];
+                        
+                        let v = interp(v1Transformed, v2Transformed, f);
                         
                         // vertex position
                         mesh.push(v[0]);
