@@ -32,9 +32,9 @@ function density(x, y, z) {
         return -1;
     }
     
-//    x += simplex.noise3D(x * 0.25, y * 0.25, z * 0.25);
-//    y += simplex.noise3D(x * 0.25 + 100, y * 0.25 + 100, z * 0.25 + 100);
-//    z += simplex.noise3D(x * 0.25 + 200, y * 0.25 + 200, z * 0.25 + 200);
+    x += simplex.noise3D(x * 0.25, y * 0.25, z * 0.25);
+    y += simplex.noise3D(x * 0.25 + 100, y * 0.25 + 100, z * 0.25 + 100);
+    z += simplex.noise3D(x * 0.25 + 200, y * 0.25 + 200, z * 0.25 + 200);
     return -y +
         simplex.noise3D(x * 0.125, y * 0.125, z * 0.125) * 4 +
         simplex.noise3D(x * 0.25, y * 0.25, z * 0.25) * 2 +
