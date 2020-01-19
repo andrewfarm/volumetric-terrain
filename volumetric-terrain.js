@@ -54,6 +54,7 @@ function init() {
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.removeChild(document.getElementById("loadingtext"));
     document.body.appendChild(renderer.domElement);
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.zoomSpeed = 0.5;
@@ -105,8 +106,10 @@ function animate() {
 };
 
 if (WEBGL.isWebGLAvailable()) {
-    init();
-    animate();
+    setTimeout(function() {
+        init();
+        animate();
+    }, 0);
 } else {
     var warning = WEBGL.getWebGLErrorMessage();
     document.body.appendChild(warning);
