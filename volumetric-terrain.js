@@ -95,6 +95,7 @@ function init() {
     
     camera.position.y = 5;
     camera.position.z = 10;
+    camera.lookAt(0, 0, 0);
 }
 
 function animate() {
